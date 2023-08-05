@@ -9,11 +9,13 @@ import {
   Title,
   useMantineTheme,
   TextInput,
+  Group,
 } from "@mantine/core";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { createClient } from "@supabase/supabase-js";
 import { useState, useEffect } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { IconBrandDiscordFilled, IconBrandTelegram } from "@tabler/icons-react";
 
 interface SessionUser {
   name: string;
@@ -133,7 +135,7 @@ export default function IndexPage() {
 
   if (userData) {
     return (
-      <Center mt={400}>
+      <Center mt={100}>
         <Flex
           gap='md'
           justify='center'
@@ -153,9 +155,9 @@ export default function IndexPage() {
           <Button
             uppercase
             onClick={() => signOut()}
-            radius={"lg"}
+            radius='md'
             variant='light'
-            size='xl'>
+            size='md'>
             Signout
           </Button>
         </Flex>
@@ -165,7 +167,7 @@ export default function IndexPage() {
 
   return (
     <>
-      <Center mt={500}>
+      <Center mt={400}>
         {loginpage ? (
           <Flex
             gap='md'
@@ -180,10 +182,9 @@ export default function IndexPage() {
               placeholder='example@gmail.com'
               label='email'
               radius='lg'
-              size='lg'
+              size='md'
               withAsterisk
             />
-
             <Modal
               radius={20}
               opened={opened}
@@ -206,45 +207,61 @@ export default function IndexPage() {
               centered>
               Enter the email
             </Modal>
+
             <Button
               mx={25}
               radius={"lg"}
               variant='light'
-              size='xl'
+              size='md'
+              leftIcon={<IconBrandTelegram size='1.2rem' />}
               onClick={() => {
                 value ? handleLoginTouser(value) : open();
               }}>
               Login
             </Button>
+
             {wrongemail ? (
               <>
                 <Text c={"red"}>
                   Sorry, your email was incorrect. Please double-check your
                   email.
                 </Text>
+
+                <Text>Not Signed in, Sign up by clicking below button</Text>
+                <Button
+                  radius={"lg"}
+                  variant='light'
+                  size='md'
+                  leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
+                  onClick={() => signIn()}>
+                  Sign up
+                </Button>
               </>
             ) : (
               <></>
             )}
           </Flex>
         ) : (
-          <>
+          <Group>
             <Button
-              mx={25}
               radius={"lg"}
               variant='light'
-              size='xl'
+              size='md'
+              // leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
+              uppercase
               onClick={() => handleLogin()}>
               Login
             </Button>
             <Button
               radius={"lg"}
               variant='light'
-              size='xl'
+              size='md'
+              leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
+              uppercase
               onClick={() => signIn()}>
               Sign in
             </Button>
-          </>
+          </Group>
         )}
       </Center>
     </>

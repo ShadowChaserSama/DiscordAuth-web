@@ -28,6 +28,7 @@ export default function App(props: AppProps) {
         withNormalizeCSS
         theme={{
           /** Put your mantine theme override here */
+          fontFamily: "Qicksands , sans-serif",
           colorScheme: "dark",
         }}>
         <SessionProvider session={session}>
