@@ -1,5 +1,4 @@
 import {
-  Alert,
   Box,
   Text,
   Button,
@@ -7,9 +6,7 @@ import {
   Flex,
   Image,
   Modal,
-  Textarea,
   Title,
-  rem,
   useMantineTheme,
   TextInput,
 } from "@mantine/core";
@@ -17,7 +14,6 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { createClient } from "@supabase/supabase-js";
 import { useState, useEffect } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { GOOGLE_FONT_PROVIDER } from "next/dist/shared/lib/constants";
 
 interface SessionUser {
   name: string;
@@ -96,7 +92,6 @@ export default function IndexPage() {
       if (email) {
         getUserFromDB(email).then((userDataFromDB) => {
           if (!userDataFromDB) {
-            // User details not in database, insert them
             handleInsertTOdb(sessionUser);
           }
         });
