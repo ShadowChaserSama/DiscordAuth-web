@@ -5,17 +5,18 @@ import {
   Center,
   Flex,
   Image,
-  Modal,
   Title,
   useMantineTheme,
   TextInput,
   Group,
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { createClient } from "@supabase/supabase-js";
 import { useState, useEffect } from "react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconBrandDiscordFilled, IconBrandTelegram } from "@tabler/icons-react";
+import HeaderComp from "./components/Header";
 
 interface SessionUser {
   name: string;
@@ -55,7 +56,7 @@ async function getUserFromDB(email: string): Promise<SessionUser | null> {
   return data;
 }
 
-export default function IndexPage() {
+export default function Home() {
   const { data: session } = useSession();
   const [userData, setUserData] = useState<SessionUser | null>(null);
   const [loginpage, setLoginpage] = useState(false);
@@ -64,14 +65,22 @@ export default function IndexPage() {
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery("(max-width: 50em)");
   const theme = useMantineTheme();
+  const form = useForm({
+    initialValues: {
+      email: "",
+    },
+
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+    },
+  });
 
   function handleLogin() {
     setLoginpage(true);
   }
-  function handleLoginTouser(value: string) {
-    getUserFromDB(value).then((userDataFromDB) => {
+  function handleLoginTouser(value: any) {
+    getUserFromDB(value.email).then((userDataFromDB) => {
       if (!userDataFromDB) {
-        // alert(`No such user found with the username ${value}`);
         setWrongemail(true);
       } else {
         setLoginpage(false);
@@ -114,7 +123,7 @@ export default function IndexPage() {
             <Image
               src={session.user.image}
               radius={25}
-              alt='kenda'
+              alt={`${session.user.name}`}
               width={150}
               height={150}
             />
@@ -167,86 +176,86 @@ export default function IndexPage() {
 
   return (
     <>
-      <Center mt={400}>
+      <HeaderComp></HeaderComp>
+      <Center mt={isMobile ? 100 : 200}>
         {loginpage ? (
-          <Flex
-            gap='md'
-            justify='center'
-            align='center'
-            direction='column'
-            wrap='wrap'>
-            <TextInput
-              w={500}
-              value={value}
-              onChange={(event) => setValue(event.currentTarget.value)}
-              placeholder='example@gmail.com'
-              label='email'
-              radius='lg'
-              size='md'
-              withAsterisk
-            />
-            <Modal
-              radius={20}
-              opened={opened}
-              onClose={close}
-              title='Discord Auth'
-              fullScreen={isMobile}
-              transitionProps={{ transition: "fade", duration: 200 }}
-              overlayProps={{
-                color:
-                  theme.colorScheme === "dark"
-                    ? theme.colors.dark[9]
-                    : theme.colors.gray[2],
-                opacity: 0.55,
-                blur: 3,
-              }}
-              styles={(theme) => ({
-                header: { backgroundColor: "black" },
-                body: { backgroundColor: "black" },
-              })}
-              centered>
-              Enter the email
-            </Modal>
-
-            <Button
-              mx={25}
-              radius={"lg"}
-              variant='light'
-              size='md'
-              leftIcon={<IconBrandTelegram size='1.2rem' />}
-              onClick={() => {
-                value ? handleLoginTouser(value) : open();
-              }}>
-              Login
-            </Button>
-
-            {wrongemail ? (
-              <>
-                <Text c={"red"}>
-                  Sorry, your email was incorrect. Please double-check your
-                  email.
-                </Text>
-
-                <Text>Not Signed in, Sign up by clicking below button</Text>
-                <Button
-                  radius={"lg"}
-                  variant='light'
+          <>
+            <Flex
+              gap='md'
+              mx={10}
+              direction='column'
+              wrap='wrap'>
+              <div>
+                <Group position='right'>
+                  <Button
+                    onClick={() => setLoginpage(false)}
+                    variant='light'
+                    radius='md'
+                    size='md'>
+                    Back
+                  </Button>
+                </Group>
+              </div>
+              <form
+                onSubmit={form.onSubmit((values) => handleLoginTouser(values))}>
+                <TextInput
+                  w={isMobile ? 350 : 500}
+                  placeholder='example@gmail.com'
+                  label='email'
+                  radius='lg'
                   size='md'
-                  leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
-                  onClick={() => signIn()}>
-                  Sign up
-                </Button>
-              </>
-            ) : (
-              <></>
-            )}
-          </Flex>
+                  withAsterisk
+                  {...form.getInputProps("email")}
+                />
+                {wrongemail ? (
+                  <Text
+                    mt={5}
+                    c={"red"}>
+                    Check wether entered email address is correct or Signed in ?
+                  </Text>
+                ) : (
+                  <></>
+                )}
+                <Group
+                  position='center'
+                  mt={"md"}>
+                  <Button
+                    type='submit'
+                    radius={"lg"}
+                    variant='light'
+                    size='md'
+                    leftIcon={<IconBrandTelegram size='1.2rem' />}>
+                    Login
+                  </Button>
+                </Group>
+              </form>
+
+              {wrongemail ? (
+                <>
+                  <Text ta={"center"}>
+                    Not Signed in ?, Sign up by clicking the signup button
+                  </Text>
+                  <Button
+                    mx={25}
+                    radius={"lg"}
+                    variant='light'
+                    size='md'
+                    leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
+                    onClick={() => signIn()}>
+                    Sign up
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
+            </Flex>
+          </>
         ) : (
           <Group>
             <Button
               radius={"lg"}
               variant='light'
-              size='md'
+              size='lg'
               // leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
               uppercase
               onClick={() => handleLogin()}>
@@ -255,10 +264,10 @@ export default function IndexPage() {
             <Button
               radius={"lg"}
               variant='light'
-              size='md'
+              size='lg'
               leftIcon={<IconBrandDiscordFilled size='1.2rem' />}
               uppercase
-              onClick={() => signIn()}>
+              onClick={() => signIn("discord")}>
               Sign in
             </Button>
           </Group>

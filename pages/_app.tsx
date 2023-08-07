@@ -1,6 +1,6 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { Alert, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";
 
 export default function App(props: AppProps) {
@@ -12,7 +12,7 @@ export default function App(props: AppProps) {
   return (
     <>
       <Head>
-        <title>Page title</title>
+        <title>Discord Auth</title>
         <link
           rel='shortcut icon'
           href='/logo.png'
@@ -28,7 +28,7 @@ export default function App(props: AppProps) {
         withNormalizeCSS
         theme={{
           /** Put your mantine theme override here */
-          fontFamily: "Qicksands , sans-serif",
+          fontFamily: "Quicksands , sans-serif",
           colorScheme: "dark",
         }}>
         <SessionProvider session={session}>
