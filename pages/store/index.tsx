@@ -1,16 +1,16 @@
 import { Center, Container, Title } from "@mantine/core";
 import React from "react";
 
-function Home() {
+function Store() {
   return (
     <Container
-      style={{ backgroundColor: "black", maxWidth: "100%", height: "90.9vh" }}
+      style={{ backgroundColor: "#080808", maxWidth: "100%", height: "90.9vh" }}
       p={25}>
       <Center>
-        <Title>HOME</Title>
+        <Title>STORE</Title>
       </Center>
     </Container>
   );
 }
 
-export default Home;
+export default Store;

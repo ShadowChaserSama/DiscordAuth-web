@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";
+import HeaderComp from "./components/Header";
 
 export default function App(props: AppProps) {
   const {
@@ -27,11 +28,13 @@ export default function App(props: AppProps) {
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          /** Put your mantine theme override here */
+          primaryColor: "red",
           fontFamily: "Quicksands , sans-serif",
           colorScheme: "dark",
+          focusRing: "never",
         }}>
         <SessionProvider session={session}>
+          <HeaderComp></HeaderComp>
           <Component {...pageProps} />
         </SessionProvider>
       </MantineProvider>
